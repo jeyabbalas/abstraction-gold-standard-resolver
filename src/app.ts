@@ -3,7 +3,7 @@
 import { getFiles, type StoredSession } from './core/db';
 import { backup, fileStem } from './core/exporter';
 import type { Session, SessionEvent } from './core/session';
-import { applyTheme, buildHash, currentMode, navigate, parseHash, type State, type StateKey, type Store, type ThemePref, type ViewName } from './state';
+import { applyTheme, buildHash, currentMode, navigate, parseHash, tabSession, type State, type StateKey, type Store, type ThemePref, type ViewName } from './state';
 import { downloadText, hideTooltip, openMenu, ring, toast, withTooltip } from './ui/components';
 import { h, render } from './ui/dom';
 import { fmtInt, fmtPct, plural } from './ui/format';
@@ -264,6 +264,7 @@ export function mountApp(root: HTMLElement, store: Store): void {
     if (current && current !== state.session) current.detach();
     current = state.session;
     saveError = null;
+    tabSession.set(state.stored?.id ?? null);
     paintHeader(state);
     if (!state.session || !state.stored) {
       document.title = 'Gold Standard Resolver';

@@ -3,6 +3,7 @@ import { detect, reportMatcher } from '../src/core/detect';
 import { diffWords } from '../src/core/diff';
 import { adjudicationLog, consensusRecords, toCsv } from '../src/core/exporter';
 import { reflow, shouldReflow } from '../src/core/markdown';
+import { defaultLabel } from '../src/core/project';
 import { cellPermutation } from '../src/core/random';
 import { assignedLabels, buildSchemaModel, parseDescription } from '../src/core/schema';
 import { alignSnippets, splitSnippets, TextIndex } from '../src/core/snippets';
@@ -212,9 +213,23 @@ describe('snippets, diff, terms, reflow, kappa', () => {
   });
 
   it('reflows one-line reports', () => {
-    const t = 'A. UTERUS, HYSTERECTOMY:  - LEIOMYOMA.  - ADENOMYOSIS.    B. OVARY, OOPHORECTOMY:  - CYST.'.repeat(2);
-    expect(shouldReflow(t)).toBe(true);
-    expect(reflow('A. UTERUS:  - LEIOMYOMA.    B. OVARY:  - CYST.')).toBe('A. UTERUS:\n- LEIOMYOMA.\n\nB. OVARY:\n- CYST.');
+    const parts = 'A. UTERUS, CERVIX, HYSTERECTOMY:  - LEIOMYOMA.  - ADENOMYOSIS.    B. LEFT OVARY, OOPHORECTOMY:  - SEROUS CYSTADENOMA.';
+    expect(shouldReflow(parts)).toBe(true);
+    expect(reflow(parts)).toBe('A. UTERUS, CERVIX, HYSTERECTOMY:\n- LEIOMYOMA.\n- ADENOMYOSIS.\n\nB. LEFT OVARY, OOPHORECTOMY:\n- SEROUS CYSTADENOMA.');
+    const wrapped = 'A.  UTERUS, SUPRACERVICAL HYSTERECTOMY:  LEIOMYOMA.  NO ATYPIA.  ENDOMETRIUM: INACTIVE, NEGATIVE FOR HYPERPLASIA AND          MALIGNANCY.';
+    expect(reflow(wrapped)).toBe('A.  UTERUS, SUPRACERVICAL HYSTERECTOMY:\nLEIOMYOMA.  NO ATYPIA.  ENDOMETRIUM: INACTIVE, NEGATIVE FOR HYPERPLASIA AND MALIGNANCY.');
+    const comment = 'B.     OVARY, RIGHT, OOPHORECTOMY:  - CORPUS LUTEUM CYST.  - NO MALIGNANCY.     COMMENT: CLINICAL HISTORY REVIEWED.';
+    expect(reflow(comment)).toBe('B. OVARY, RIGHT, OOPHORECTOMY:\n- CORPUS LUTEUM CYST.\n- NO MALIGNANCY.\n\nCOMMENT: CLINICAL HISTORY REVIEWED.');
+    expect(reflow('Histologic type:      Endometrioid')).toBe('Histologic type:      Endometrioid');
+    expect(shouldReflow('VULVA, LEFT LABIUM MAJUS, PUNCH BIOPSY:  - LICHEN SCLEROSUS.  - NEGATIVE FOR DIFFERENTIATED VULVAR INTRAEPITHELIAL NEOPLASIA.')).toBe(true);
+    expect(shouldReflow('A narrative paragraph that keeps going for a while with two spaces between its sentences.  It has no structure.  None.')).toBe(false);
+    expect(shouldReflow('SHORT:  - LINE.')).toBe(false);
+  });
+
+  it('names sources', () => {
+    expect(defaultLabel('human_abstraction.json', 0, 'automated')).toBe('Human abstraction');
+    expect(defaultLabel('.json', 1, 'automated')).toBe('Source 2');
+    expect(defaultLabel('reviewer-a.json', 2, 'experts')).toBe('Abstractor 3');
   });
 
   it('computes kappa', () => {

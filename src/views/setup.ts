@@ -22,6 +22,8 @@ export interface SetupPreset {
   scenario?: Scenario;
   blind?: boolean;
   name?: string;
+  /** Display names by source path; they stay when the scenario changes. */
+  labels?: Record<string, string>;
 }
 
 export interface SetupOptions {
@@ -122,8 +124,8 @@ export function mountSetup(parent: HTMLElement, opts: SetupOptions): { destroy()
   let schemaPath = det.schemaPath ?? '';
   let keyField = det.keyField ?? '';
   const selected = new Set(det.sources.map((s) => s.path));
-  const labels = new Map<string, string>();
-  const edited = new Set<string>();
+  const labels = new Map<string, string>(Object.entries(preset.labels ?? {}));
+  const edited = new Set<string>(labels.keys());
   let settings: Settings = { ...DEFAULT_SETTINGS, scenario: preset.scenario ?? guessScenario(det), blind: preset.blind ?? true };
   let name = preset.name ?? fileSet.name;
   let keepFiles = true;

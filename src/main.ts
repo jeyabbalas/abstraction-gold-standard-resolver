@@ -4,15 +4,31 @@ import './styles/components.css';
 import './styles/app.css';
 import './styles/views.css';
 import { mountApp } from './app';
-import { applyTheme, loadThemePref, parseHash, Store } from './state';
+import { openSession, type Opened } from './sessions';
+import { applyTheme, loadThemePref, parseHash, Store, tabSession } from './state';
 
 const theme = loadThemePref();
-const store = new Store({
-  session: null,
-  stored: null,
-  theme,
-  mode: applyTheme(theme),
-  route: parseHash(location.hash),
-});
+const mode = applyTheme(theme);
 
-mountApp(document.getElementById('app')!, store);
+/** After a reload, reopen the session this tab had open (when its files are kept in the browser). */
+async function reopen(): Promise<Opened | null> {
+  const id = tabSession.get();
+  if (!id) return null;
+  try {
+    return await openSession(id);
+  } catch {
+    tabSession.set(null);
+    return null;
+  }
+}
+
+void reopen().then((opened) => {
+  const store = new Store({
+    session: opened?.session ?? null,
+    stored: opened?.stored ?? null,
+    theme,
+    mode,
+    route: parseHash(location.hash),
+  });
+  mountApp(document.getElementById('app')!, store);
+});

@@ -272,7 +272,6 @@ const factory: ViewFactory = ({ session }) => {
     const doc = session.project.reports.get(r);
     report.show(doc, r, session.project.twins.get(r) ?? []);
     index = report.text ? new TextIndex(report.text) : null;
-    if (f && session.field(f)) promoted.add(f);
     refreshOrder();
     const target = f && session.field(f) ? f : nextOpen(session, r, order, null) ?? null;
     setFocus(target);

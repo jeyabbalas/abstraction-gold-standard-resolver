@@ -125,3 +125,22 @@ export const prefs = {
     }
   },
 };
+
+/** The session open in this tab, so a reload reopens it (sessionStorage: per tab, never shared). */
+export const tabSession = {
+  get(): string | null {
+    try {
+      return sessionStorage.getItem(`${PREFIX}open`);
+    } catch {
+      return null;
+    }
+  },
+  set(id: string | null): void {
+    try {
+      if (id === null) sessionStorage.removeItem(`${PREFIX}open`);
+      else sessionStorage.setItem(`${PREFIX}open`, id);
+    } catch {
+      /* storage unavailable */
+    }
+  },
+};

@@ -179,9 +179,10 @@ export interface DialogHandle {
   el: HTMLElement;
 }
 
-let openDialogs = 0;
+/** Open dialogs, innermost last: only the top one answers Esc and Tab. */
+const dialogStack: object[] = [];
 /** True while a modal dialog is open (views pause their keyboard shortcuts). */
-export const dialogOpen = (): boolean => openDialogs > 0;
+export const dialogOpen = (): boolean => dialogStack.length > 0;
 
 export function openDialog(opts: {
   title: Child;
@@ -203,11 +204,13 @@ export function openDialog(opts: {
   const backdrop = h('div', { class: 'dialog-backdrop' }, panel);
   const previous = document.activeElement as HTMLElement | null;
   document.body.appendChild(backdrop);
-  openDialogs += 1;
+  const token = {};
+  dialogStack.push(token);
   requestAnimationFrame(() => backdrop.classList.add('open'));
   const onKey = (e: KeyboardEvent) => {
+    if (dialogStack[dialogStack.length - 1] !== token) return;
     if (e.key === 'Escape') {
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       close();
     } else if (e.key === 'Tab') {
       // Keep focus inside the dialog.
@@ -236,7 +239,8 @@ export function openDialog(opts: {
   function close() {
     if (closed) return;
     closed = true;
-    openDialogs -= 1;
+    const at = dialogStack.indexOf(token);
+    if (at >= 0) dialogStack.splice(at, 1);
     document.removeEventListener('keydown', onKey, true);
     backdrop.classList.remove('open');
     setTimeout(() => backdrop.remove(), 160);

@@ -885,6 +885,11 @@ textarea.input {
   opacity: 1;
 }
 
+/* A closing dialog must not catch the next click. */
+.dialog-backdrop:not(.open) {
+  pointer-events: none;
+}
+
 .dialog {
   width: min(520px, 100%);
   display: flex;

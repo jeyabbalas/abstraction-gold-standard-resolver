@@ -80,6 +80,9 @@ export function adjudicationLog(session: Session, all = false): LogRow[] {
   return rows;
 }
 
+/** Byte-order mark: spreadsheet apps then read the CSV as UTF-8. */
+export const CSV_BOM = '\uFEFF';
+
 export function toCsv(rows: readonly LogRow[]): string {
   if (!rows.length) return '';
   const cols = Object.keys(rows[0]!);
@@ -173,7 +176,7 @@ export function exportZip(session: Session, stored: StoredSession, files: TextFi
   const stemName = fileStem(session.project.name);
   return zipSync({
     [`${stemName}_consensus.json`]: strToU8(JSON.stringify(consensusRecords(session, scope), null, 2)),
-    [`${stemName}_adjudication_log.csv`]: strToU8(toCsv(adjudicationLog(session))),
+    [`${stemName}_adjudication_log.csv`]: strToU8(CSV_BOM + toCsv(adjudicationLog(session))),
     [`${stemName}_summary.json`]: strToU8(JSON.stringify(summary(session, stored), null, 2)),
     [`${stemName}_session_backup.json`]: strToU8(JSON.stringify(backup(session, stored, files))),
   });

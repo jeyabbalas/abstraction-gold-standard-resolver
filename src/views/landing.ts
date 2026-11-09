@@ -46,6 +46,8 @@ interface DemoScenario {
   description: string;
   blind: boolean;
   sources: string[];
+  /** Optional display names, one per source. */
+  labels?: string[];
 }
 
 interface DemoManifest {
@@ -474,7 +476,8 @@ export function mountLanding(parent: HTMLElement, store: Store): { destroy(): vo
       }),
     );
     const scenario = sc.sources.length > 2 || /expert|panel|abstractor/i.test(sc.id) ? 'experts' : 'automated';
-    await loadFolder(async () => ({ name: `demo_${sc.id}`, files, skipped: 0 }), { scenario, blind: sc.blind, name: `${sc.title} (demo)` });
+    const labels = Object.fromEntries(sc.sources.flatMap((p, i) => (sc.labels?.[i] ? [[p, sc.labels[i]]] : [])));
+    await loadFolder(async () => ({ name: `demo_${sc.id}`, files, skipped: 0 }), { scenario, blind: sc.blind, name: `${sc.title} (demo)`, labels });
   }
 
   // ------------------------------------------------------------------ home

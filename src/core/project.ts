@@ -28,10 +28,14 @@ export interface ProjectConfig {
   settings: Settings;
 }
 
-/** Default display labels: "Abstractor 1, 2, …" for experts; the file stem otherwise. */
+/**
+ * Default display labels: "Abstractor 1, 2, …" for experts; otherwise the
+ * file stem as a phrase ("human_abstraction.json" → "Human abstraction").
+ */
 export function defaultLabel(fileName: string, index: number, scenario: Settings['scenario']): string {
   if (scenario === 'experts') return `Abstractor ${index + 1}`;
-  return fileName.replace(/\.json$/i, '').replace(/[_-]+/g, ' ').trim() || `Source ${index + 1}`;
+  const stem = fileName.replace(/\.json$/i, '').replace(/[_-]+/g, ' ').trim();
+  return stem ? stem.charAt(0).toUpperCase() + stem.slice(1) : `Source ${index + 1}`;
 }
 
 export async function buildProject(files: readonly TextFile[], config: ProjectConfig, detection?: Detection): Promise<Project> {
