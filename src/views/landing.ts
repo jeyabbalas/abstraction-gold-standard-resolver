@@ -13,7 +13,7 @@ import {
   getFiles,
   isBackup,
   listSessions,
-  storageEstimate,
+  storedSize,
   type SessionBackup,
   type StoredSession,
 } from '../core/db';
@@ -323,7 +323,7 @@ export function mountLanding(parent: HTMLElement, store: Store): { destroy(): vo
       return;
     }
     sessionsBox.hidden = false;
-    const estimate = await storageEstimate();
+    const size = await storedSize().catch(() => null);
     let persisted = false;
     try {
       persisted = (await navigator.storage?.persisted?.()) ?? false;
@@ -341,7 +341,7 @@ export function mountLanding(parent: HTMLElement, store: Store): { destroy(): vo
         h(
           'span',
           null,
-          estimate ? `Sessions use about ${fmtBytes(estimate.usage)} of this browser’s storage. ` : 'Sessions are saved in this browser’s storage. ',
+          size !== null ? `Sessions take about ${fmtBytes(size)} of this browser’s storage. ` : 'Sessions are saved in this browser’s storage. ',
           persisted ? 'The browser keeps it until you delete it.' : 'The browser may clear it if the disk runs low on space: back up sessions you care about.',
         ),
       ),

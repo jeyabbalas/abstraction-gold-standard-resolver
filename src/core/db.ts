@@ -159,14 +159,22 @@ export async function requestPersistence(): Promise<boolean> {
   }
 }
 
-/** Approximate storage use, for the session list. */
-export async function storageEstimate(): Promise<{ usage: number; quota: number } | null> {
-  try {
-    const e = await navigator.storage?.estimate?.();
-    return e && typeof e.usage === 'number' && typeof e.quota === 'number' ? { usage: e.usage, quota: e.quota } : null;
-  } catch {
-    return null;
+/**
+ * Roughly how much the saved sessions take (kept files, cells, session
+ * records), in characters. The browser's own estimate covers the whole
+ * origin, which on GitHub Pages is shared with the owner's other sites.
+ */
+export async function storedSize(): Promise<number> {
+  const d = await db();
+  let n = 0;
+  const tx = d.transaction(['sessions', 'files', 'cells']);
+  for (let c = await tx.objectStore('files').openCursor(); c; c = await c.continue()) {
+    for (const f of c.value.files) n += f.path.length + f.text.length;
   }
+  for (let c = await tx.objectStore('cells').openCursor(); c; c = await c.continue()) n += JSON.stringify(c.value).length;
+  for (const s of await tx.objectStore('sessions').getAll()) n += JSON.stringify(s).length;
+  await tx.done;
+  return n;
 }
 
 // ------------------------------------------------------------------ backups

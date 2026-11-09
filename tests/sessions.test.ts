@@ -1,7 +1,7 @@
 /** Sessions saved in IndexedDB (fake-indexeddb): save, reopen, re-choose the folder, back up, restore, delete. */
 import 'fake-indexeddb/auto';
 import { describe, expect, it } from 'vitest';
-import { deleteSession, getCells, getFiles, getSession, isBackup, listSessions } from '../src/core/db';
+import { deleteSession, getCells, getFiles, getSession, isBackup, listSessions, storedSize } from '../src/core/db';
 import { detect } from '../src/core/detect';
 import { backup } from '../src/core/exporter';
 import type { Session } from '../src/core/session';
@@ -104,7 +104,9 @@ describe('sessions in IndexedDB', () => {
     void _files;
     await expect(restoreBackup(withoutFiles)).rejects.toBeInstanceOf(NeedsFolderError);
 
+    const before = await storedSize();
     await deleteSession(restored.stored.id);
+    expect(await storedSize()).toBeLessThan(before - file.files.reduce((n: number, f: { text: string }) => n + f.text.length, 0) + 1);
     expect(await getSession(restored.stored.id)).toBeUndefined();
     expect(await getCells(restored.stored.id)).toEqual([]);
     expect(await getFiles(restored.stored.id)).toBeNull();
