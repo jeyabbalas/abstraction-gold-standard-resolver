@@ -1,0 +1,220 @@
+/*
+ * Design tokens. Chrome is monochrome (warm neutral grays); color is reserved
+ * for meaning: the candidates of a conflict (A, B, C… — positional, never a
+ * source's identity in blind mode), the state of a cell (open, resolved,
+ * flagged) and report highlights. Dark mode is selected, not inverted.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --page: #f6f6f3;
+  --surface: #fcfcfb;
+  --surface-2: #f3f2ee;
+  --surface-3: #e9e8e2;
+  --overlay: rgba(252, 252, 251, 0.86);
+  --paper: #fffffe;
+
+  /* Ink */
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-3: #6f6e69;
+  --ink-muted: #898781;
+  --ink-inverse: #ffffff;
+
+  /* Lines */
+  --hairline: rgba(11, 11, 11, 0.1);
+  --hairline-2: rgba(11, 11, 11, 0.16);
+  --grid: #e1e0d9;
+
+  /* Interaction */
+  --focus: #2a78d6;
+  --focus-ring: rgba(42, 120, 214, 0.18);
+  --hover: rgba(11, 11, 11, 0.045);
+  --pressed: rgba(11, 11, 11, 0.08);
+  --selected: rgba(11, 11, 11, 0.06);
+
+  /* Status */
+  --good: #0ca30c;
+  --good-text: #006300;
+  --warning: #fab219;
+  --warning-text: #8a5a00;
+  --serious: #ec835a;
+  --serious-text: #a6431a;
+  --critical: #d03b3b;
+  --critical-text: #b42323;
+  --tint-good: rgba(12, 163, 12, 0.1);
+  --tint-warning: rgba(250, 178, 25, 0.16);
+  --tint-serious: rgba(236, 131, 90, 0.16);
+  --tint-critical: rgba(208, 59, 59, 0.1);
+
+  /* Candidates of a conflict, by display position (A, B, C…) */
+  --cand-1: #2a78d6;
+  --cand-2: #c2418f;
+  --cand-3: #13998a;
+  --cand-4: #8a5cd6;
+  --cand-5: #b26a12;
+  --cand-6: #5a6b7d;
+  --cand-1-tint: rgba(42, 120, 214, 0.2);
+  --cand-2-tint: rgba(194, 65, 143, 0.18);
+  --cand-3-tint: rgba(19, 153, 138, 0.2);
+  --cand-4-tint: rgba(138, 92, 214, 0.2);
+  --cand-5-tint: rgba(178, 106, 18, 0.2);
+  --cand-6-tint: rgba(90, 107, 125, 0.2);
+  --shared-tint: rgba(11, 11, 11, 0.08);
+  --term-line: #c98500;
+  --search-tint: rgba(250, 178, 25, 0.5);
+  --flash-tint: rgba(250, 178, 25, 0.62);
+
+  /* Cell states */
+  --st-open: #e8a317;
+  --st-open-tint: rgba(232, 163, 23, 0.14);
+  --st-done: #2f9e44;
+  --st-done-tint: rgba(47, 158, 68, 0.12);
+  --st-agree: #e3e2dc;
+  --st-flag: #e0592a;
+  --st-stale: #d03b3b;
+
+  /* Shape */
+  --radius-lg: 12px;
+  --radius: 9px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+  --shadow-1: 0 1px 2px rgba(11, 11, 11, 0.04);
+  --shadow-2: 0 4px 16px rgba(11, 11, 11, 0.08), 0 1px 3px rgba(11, 11, 11, 0.06);
+  --shadow-3: 0 12px 40px rgba(11, 11, 11, 0.14), 0 2px 8px rgba(11, 11, 11, 0.08);
+
+  /* Type */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-report: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 28px;
+
+  /* Layout */
+  --header-h: 52px;
+  --content-max: 1280px;
+  --gutter: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-2: #222220;
+    --surface-3: #2c2c2a;
+    --overlay: rgba(26, 26, 25, 0.86);
+    --paper: #161615;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-3: #a3a29a;
+    --ink-muted: #898781;
+    --ink-inverse: #0b0b0b;
+    --hairline: rgba(255, 255, 255, 0.1);
+    --hairline-2: rgba(255, 255, 255, 0.16);
+    --grid: #2c2c2a;
+    --focus: #5598e7;
+    --focus-ring: rgba(85, 152, 231, 0.25);
+    --hover: rgba(255, 255, 255, 0.05);
+    --pressed: rgba(255, 255, 255, 0.09);
+    --selected: rgba(255, 255, 255, 0.07);
+    --good-text: #3fbf3f;
+    --warning-text: #fab219;
+    --serious-text: #f19a76;
+    --critical-text: #ef7d7d;
+    --tint-good: rgba(12, 163, 12, 0.16);
+    --tint-warning: rgba(250, 178, 25, 0.14);
+    --tint-serious: rgba(236, 131, 90, 0.16);
+    --tint-critical: rgba(230, 103, 103, 0.16);
+    --cand-1: #4b94ea;
+    --cand-2: #e06aae;
+    --cand-3: #2bb5a5;
+    --cand-4: #a283ec;
+    --cand-5: #d08a32;
+    --cand-6: #8b9bad;
+    --cand-1-tint: rgba(75, 148, 234, 0.3);
+    --cand-2-tint: rgba(224, 106, 174, 0.28);
+    --cand-3-tint: rgba(43, 181, 165, 0.28);
+    --cand-4-tint: rgba(162, 131, 236, 0.3);
+    --cand-5-tint: rgba(208, 138, 50, 0.3);
+    --cand-6-tint: rgba(139, 155, 173, 0.3);
+    --shared-tint: rgba(255, 255, 255, 0.11);
+    --term-line: #fab219;
+    --search-tint: rgba(250, 178, 25, 0.38);
+    --flash-tint: rgba(250, 178, 25, 0.5);
+    --st-open: #f0b232;
+    --st-open-tint: rgba(240, 178, 50, 0.14);
+    --st-done: #43b85a;
+    --st-done-tint: rgba(67, 184, 90, 0.16);
+    --st-agree: #33332f;
+    --st-flag: #f0784a;
+    --st-stale: #ef7d7d;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-3: 0 12px 40px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-2: #222220;
+  --surface-3: #2c2c2a;
+  --overlay: rgba(26, 26, 25, 0.86);
+  --paper: #161615;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --ink-3: #a3a29a;
+  --ink-muted: #898781;
+  --ink-inverse: #0b0b0b;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --hairline-2: rgba(255, 255, 255, 0.16);
+  --grid: #2c2c2a;
+  --focus: #5598e7;
+  --focus-ring: rgba(85, 152, 231, 0.25);
+  --hover: rgba(255, 255, 255, 0.05);
+  --pressed: rgba(255, 255, 255, 0.09);
+  --selected: rgba(255, 255, 255, 0.07);
+  --good-text: #3fbf3f;
+  --warning-text: #fab219;
+  --serious-text: #f19a76;
+  --critical-text: #ef7d7d;
+  --tint-good: rgba(12, 163, 12, 0.16);
+  --tint-warning: rgba(250, 178, 25, 0.14);
+  --tint-serious: rgba(236, 131, 90, 0.16);
+  --tint-critical: rgba(230, 103, 103, 0.16);
+  --cand-1: #4b94ea;
+  --cand-2: #e06aae;
+  --cand-3: #2bb5a5;
+  --cand-4: #a283ec;
+  --cand-5: #d08a32;
+  --cand-6: #8b9bad;
+  --cand-1-tint: rgba(75, 148, 234, 0.3);
+  --cand-2-tint: rgba(224, 106, 174, 0.28);
+  --cand-3-tint: rgba(43, 181, 165, 0.28);
+  --cand-4-tint: rgba(162, 131, 236, 0.3);
+  --cand-5-tint: rgba(208, 138, 50, 0.3);
+  --cand-6-tint: rgba(139, 155, 173, 0.3);
+  --shared-tint: rgba(255, 255, 255, 0.11);
+  --term-line: #fab219;
+  --search-tint: rgba(250, 178, 25, 0.38);
+  --flash-tint: rgba(250, 178, 25, 0.5);
+  --st-open: #f0b232;
+  --st-open-tint: rgba(240, 178, 50, 0.14);
+  --st-done: #43b85a;
+  --st-done-tint: rgba(67, 184, 90, 0.16);
+  --st-agree: #33332f;
+  --st-flag: #f0784a;
+  --st-stale: #ef7d7d;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 12px 40px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
