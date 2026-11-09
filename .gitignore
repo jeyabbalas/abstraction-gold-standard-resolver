@@ -1,0 +1,13 @@
+# Local data (may contain sensitive reports) — never commit
+examples/
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+*.log
